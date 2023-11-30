@@ -60,22 +60,23 @@ options_frame.pack(side=tk.LEFT)
 options_frame.pack_propagate(False)
 options_frame.configure(width=150, height=600)
 
-
+nav_link_start = 120
+nav_link_diff = 35
 
 home_link = tk.Button(options_frame, text = 'Home', font = (Helvetica, 12), fg = 'White', bd = 0, bg = nav_bg, activebackground = nav_bg,activeforeground='White' , width=13, command = lambda: indicator(home_link, homepage), anchor='w', padx=15)
-home_link.place(x=0, y=100)
+home_link.place(x=0, y=nav_link_start)
 
 add_link = tk.Button(options_frame, text = 'Add Book', font = (Helvetica, 12), fg = 'White', bd = 0, bg = nav_bg, activebackground = nav_bg,activeforeground='White' , width=13, command = lambda: indicator(add_link, add_record), anchor='w', padx=15)
-add_link.place(x=0, y=135)
+add_link.place(x=0, y=nav_link_start + (nav_link_diff * 1))
 
 Sell_link = tk.Button(options_frame, text = 'Sell a Book', font = (Helvetica, 12), fg = 'White', bd = 0, bg = nav_bg, activebackground = nav_bg,activeforeground='White' , width=13, command = lambda: indicator(Sell_link, sell_record), anchor='w', padx=15)
-Sell_link.place(x=0, y=170)
+Sell_link.place(x=0, y=nav_link_start + (nav_link_diff * 2))
 
 Search_link = tk.Button(options_frame, text = 'Search Books', font = (Helvetica, 12), fg = 'White', bd = 0, bg = nav_bg, activebackground = nav_bg,activeforeground='White' , width=13, command = lambda: indicator(Search_link, search_record), anchor='w', padx=15)
-Search_link.place(x=0, y=205)
+Search_link.place(x=0, y=nav_link_start + (nav_link_diff * 3))
 
 Sales_link = tk.Button(options_frame, text = 'Sales Records', font = (Helvetica, 12), fg = 'White', bd = 0, bg = nav_bg, activebackground = nav_bg,activeforeground='White' , width=13, command = lambda: indicator(Sales_link, sales_record), anchor='w', padx=15)
-Sales_link.place(x=0, y=240)
+Sales_link.place(x=0, y=nav_link_start + (nav_link_diff * 4))
 
 main_frame = tk.Frame(root, bg = primary_bg)
 
@@ -83,8 +84,17 @@ main_frame.pack(side=tk.RIGHT)
 main_frame.pack_propagate(False)
 main_frame.configure(width=1050, height=600)
 
+canvas1 = tk.Canvas(options_frame, bg=nav_bg, width=100, height=100, highlightthickness=0)
+canvas1.pack()
 logo = tk.PhotoImage(file = "Logo.png")
-logo_lb = tk.Label(options_frame, image = logo)
-logo_lb.place(x=25, y=0)
+canvas1.create_image(50,55,image=logo)
+
+Heading = tk.Label(main_frame, text = "Welcome To The Book Store", font = (Helvetica, 30))
+lb = tk.Label(main_frame, text = "Please Login from the Home Page to acess the database\n", font = (Helvetica, 20), fg='Black')
+Heading.pack()
+lb.pack()
+img = tk.PhotoImage(file="background.png")
+label = tk.Label(main_frame, image = img)
+label.pack()
 
 root.mainloop()
