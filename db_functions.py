@@ -67,27 +67,50 @@ def sell_update_to_db(selector, name, phone, quantity, lk, p):
     print(name)
 
 def get_available_books_from_db():
-    pass
-
-def sell_book_from_db(home_frame, name, phone, quantity):
     mycursor.execute("select bookname from Available_Books")
     row = mycursor.fetchall()
     book_list = []
     for item in row:
         book_list.append(item[0])
+    return book_list
 
-    selector = tk.StringVar()
-    book_name = tk.OptionMenu(home_frame, selector, *book_list)
-    book_name.grid(row=4, column=1, sticky='w', pady=5)
-
-    mycursor.execute("select price from Available_Books where bookname='"+name+"'")
+def sell_book_from_db(book_name, name, phone, quantity):
+    print(book_name)
+    mycursor.execute("select price from Available_Books where bookname='"+str(book_name)+"'")
     p=mycursor.fetchone()
-    
-    mycursor.execute("select quantity from available_books where bookname='"+selector.get()+"'")
+    price = p[0]
+    mycursor.execute("select quantity from available_books where bookname='"+str(book_name)+"'")
     lk=mycursor.fetchone()
 
-    go_btn = tk.Button(home_frame, text = 'Sell Book', font = ("Bold", 12), width=18, fg = 'White', bd = 0, bg = "#003EFF", command = lambda: sell_update_to_db(selector, name, phone, quantity, lk, p))
-    go_btn.grid(row=6, column=1, columnspan = 2, sticky='w')
+    mycursor.execute("select bookname from available_books where bookname='"+book_name+"'")
+    log=mycursor.fetchone()
+
+    if log is not None:
+        mycursor.execute("insert into Sell_rec values('"+name+"','"+str(phone)+"','"+book_name+"','"+str(quantity)+"','"+str(price)+"')")
+        mycursor.execute("update Available_Books set quantity=quantity-'"+quantity+"' where BookName='"+book_name+"'")
+        mydb.commit()
+
+        messagebox.showinfo("Success", "BOOK SOLD!")
+
+    else:
+        messagebox.showinfo("Sad", "BOOK UNAVAILABLE")
+
+def sell_rec_display(display_frame):
+    mycursor.execute(f"select * from sell_rec")
+    records = mycursor.fetchall()
+    records.insert(0, ("Customer", "Phone", "Book", "Qty", "Price"))
+
+    for frame in display_frame.winfo_children():
+        frame.destroy()
+
+    Helvetica = Font(family = "Helvetica", weight = 'bold')
+    
+    print_record = ''
+    for i, record in enumerate(records):
+        bg_color = "#B9B9B9" if i == 0 else "#DCDCDC"
+        for j, itm in enumerate(record):
+            row_data = tk.Label(display_frame, text = str(itm), font = (Helvetica, 12), bg=bg_color, fg = "Black", width=20, height=2,highlightthickness=1, highlightbackground = "Black")
+            row_data.place(x = j*190, y = i*45)
 
     
 

@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter.font import Font
 from PIL import ImageTk, Image
 from tkinter import messagebox
-from db_functions import add_record_to_db, search_record_in_db, login_db, sell_book_from_db
+from db_functions import add_record_to_db, get_available_books_from_db, search_record_in_db, login_db, sell_book_from_db, sell_rec_display
 
 def SignUp(main_frame, y):
     login(main_frame, "SignUp", y)
@@ -140,13 +140,37 @@ def sell_book(main_frame):
     phone_e = tk.Entry(home_frame, width= 30, font=(Helvetica, 20))
     phone_e.grid(row=3, column=1, columnspan = 1, pady=5)
 
+    book_list = get_available_books_from_db()
+    selector = tk.StringVar()
+    selector.set(book_list[0])
+
+    bookname_lb = tk.Label(home_frame, text = "Book Name:", font = (Helvetica, 15)).grid(row=4, column=0, sticky='w')
+    book_d = tk.OptionMenu(home_frame, selector, *book_list)
+    book_d.grid(row=4, column=1, sticky='w', pady=5)
+
     quantity_lb = tk.Label(home_frame, text = "Quantity:", font = (Helvetica, 15)).grid(row=5, column=0, sticky='w')
     quantity_e = tk.Entry(home_frame, width= 30, font=(Helvetica, 20))
     quantity_e.grid(row=5, column=1, columnspan = 1, pady=5)
 
-    bookname_lb = tk.Label(home_frame, text = "Book Name:", font = (Helvetica, 15)).grid(row=4, column=0, sticky='w')
+    go_btn = tk.Button(home_frame, text = 'Sell Book', font = ("Bold", 12), width=18, fg = 'White', bd = 0, bg = "#003EFF", command = lambda: sell_book_from_db(selector.get(), cname_e.get(), phone_e.get(), quantity_e.get()))
+    go_btn.grid(row=6, column=1, columnspan = 2, sticky='w')
 
-    sell_book_from_db(home_frame, cname_e.get(), phone_e.get(), quantity_e.get())
+def sell_rec(main_frame):
+    display_frame = tk.Frame(main_frame, bg = "White")
+    display_frame.pack(side=tk.BOTTOM)
+    display_frame.pack_propagate(False)
+    display_frame.configure(width=950, height=450)
+
+    home_frame = tk.Frame(main_frame)
+    home_frame.pack(pady=20)
+    Helvetica = Font(family = "Helvetica", weight = 'bold')
+
+    Heading = tk.Label(home_frame, text = "SALES RECORDS", font = (Helvetica, 20))
+    Heading.grid(row = 0, column=0, columnspan=3, sticky='w')
+
+    sell_rec_display(display_frame)
+
+    
     
 
         
